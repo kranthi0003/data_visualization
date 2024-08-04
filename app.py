@@ -17,6 +17,7 @@ st.markdown("""
 # Display the centered page title
 st.markdown("<h1 class='title'>Heart Attack Risk Prediction Dashboard</h1>", unsafe_allow_html=True)
 st.write("\n\n")
+
 # Load your data
 @st.cache_data()
 def load_data():
@@ -25,6 +26,15 @@ def load_data():
     return data
 
 data = load_data()
+
+# Add a download button for the data
+st.sidebar.header("Download Data")
+st.sidebar.download_button(
+    label="Download data as Excel",
+    data=open('data.xlsx', 'rb').read(),
+    file_name='data.xlsx',
+    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+)
 
 # Define thresholds and labels for categorization
 cholesterol_thresholds = [0, 200, 239, float('inf')]
@@ -62,7 +72,6 @@ fig1.update_traces(marker_color=['#636EFA','#EF553B','#00CC96'], marker_line_col
 st.plotly_chart(fig1, use_container_width=True)
 
 
-
 # Risk of Heart Attack in Asian Countries
 st.subheader('Risk of Heart Attack in Asian Countries')
 asian_countries = ['South Korea', 'Thailand', 'China', 'Vietnam', 'Japan', 'India']
@@ -96,7 +105,7 @@ fig_cholesterol_risk.update_layout(
 )
 st.plotly_chart(fig_cholesterol_risk, use_container_width=True)
 
-#Continent-wise Risk of Heart Attack
+# Continent-wise Risk of Heart Attack
 st.subheader('Continent-wise Risk of Heart Attack')
 continent_risk_data = data.groupby('Continent')['Heart Attack Risk'].sum().reset_index()
 
@@ -145,13 +154,11 @@ fig_hemisphere_risk = px.bar(
     color_discrete_sequence=['#636EFA']
 )
 
-
 fig_hemisphere_risk.update_layout(
     plot_bgcolor='black',
     paper_bgcolor='black',
     font=dict(color='white')
 )
-
 
 fig_hemisphere_risk.update_traces(texttemplate='%{text}', textposition='outside')
 st.plotly_chart(fig_hemisphere_risk, use_container_width=True)
@@ -176,6 +183,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# To run this Streamlit app, save the code to a .py file and run using:
-# streamlit run app.py
