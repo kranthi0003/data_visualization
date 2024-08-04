@@ -171,7 +171,7 @@ st.markdown(
     }
     </style>
     <div class="footer">
-        Copyright © 2023 by Shivani, Nashra, Yaswanth, and Eswar. All rights reserved.
+        Copyright © 2024 by Kranthi Kiran A. All rights reserved.
     </div>
     """,
     unsafe_allow_html=True
