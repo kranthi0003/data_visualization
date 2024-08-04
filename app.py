@@ -27,12 +27,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Display the download button using HTML
-st.markdown("""
-    <a href="data:application/octet-stream;base64,{}" download="data.xlsx" class="download-button">
-        Download Data
-    </a>
-""".format(st.download_button("Download data", data=open('data.xlsx', 'rb').read(), file_name='data.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', key='download-button')), unsafe_allow_html=True)
 
 # Display the centered page title
 st.markdown("<h1 class='title'>Heart Attack Risk Prediction Dashboard</h1>", unsafe_allow_html=True)
@@ -46,6 +40,18 @@ def load_data():
     return data
 
 data = load_data()
+
+# Create a sidebar download button
+st.sidebar.download_button(
+    label="Download Data",
+    data=open('data.xlsx', 'rb').read(),
+    file_name='data.xlsx',
+    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+)
+
+# Create a download button in the main area
+st.markdown('<a href="data:application/octet-stream;base64,{}" download="data.xlsx" class="download-button">Download Data</a>'.format(st.sidebar.download_button("Download data", data=open('data.xlsx', 'rb').read(), file_name='data.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', key='download-button')), unsafe_allow_html=True)
+
 
 # Define thresholds and labels for categorization
 cholesterol_thresholds = [0, 200, 239, float('inf')]
