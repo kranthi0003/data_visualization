@@ -20,7 +20,7 @@ st.write("\n\n")
 # Load your data
 @st.cache_data()
 def load_data():
-    data = pd.read_excel('/Users/akkumaha/Desktop/Shivani/data.xlsx', engine='openpyxl')
+    data = pd.read_excel('data.xlsx', engine='openpyxl')
     # Assuming the Excel file has columns for 'Cholesterol', 'Triglycerides', 'Heart Attack Risk', 'Country', etc.
     return data
 
