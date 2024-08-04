@@ -11,8 +11,28 @@ st.markdown("""
         .title {
             text-align: center;
         }
+        .download-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+        }
     </style>
 """, unsafe_allow_html=True)
+
+# Display the download button using HTML
+st.markdown("""
+    <a href="data:application/octet-stream;base64,{}" download="data.xlsx" class="download-button">
+        Download Data
+    </a>
+""".format(st.download_button("Download data", data=open('data.xlsx', 'rb').read(), file_name='data.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', key='download-button')), unsafe_allow_html=True)
 
 # Display the centered page title
 st.markdown("<h1 class='title'>Heart Attack Risk Prediction Dashboard</h1>", unsafe_allow_html=True)
@@ -27,15 +47,6 @@ def load_data():
 
 data = load_data()
 
-# Add a download button for the data
-st.sidebar.header("Download Data")
-st.sidebar.download_button(
-    label="Download data as Excel",
-    data=open('data.xlsx', 'rb').read(),
-    file_name='data.xlsx',
-    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-)
-
 # Define thresholds and labels for categorization
 cholesterol_thresholds = [0, 200, 239, float('inf')]
 cholesterol_labels = ['Normal', 'Borderline High', 'High']
@@ -45,7 +56,6 @@ triglycerides_labels = ['Normal', 'Borderline', 'High', 'Very High']
 # Categorize cholesterol and triglycerides levels
 data['Cholesterol Category'] = pd.cut(data['Cholesterol'], bins=cholesterol_thresholds, labels=cholesterol_labels, include_lowest=True)
 data['Triglycerides Category'] = pd.cut(data['Triglycerides'], bins=triglycerides_thresholds, labels=triglycerides_labels, include_lowest=True)
-
 
 # Create columns for key metrics
 col1, col2, col3 = st.columns(3)
@@ -61,7 +71,6 @@ with col3:
     fig0 = px.pie(values=gender_count, names=gender_count.index)
     st.plotly_chart(fig0, use_container_width=True)
 
-
 # Cholesterol Level Distribution
 st.subheader('Cholesterol Level Amongst Population')
 cholesterol_counts = data['Cholesterol Category'].value_counts().loc[cholesterol_labels]
@@ -70,7 +79,6 @@ fig1 = px.bar(x=cholesterol_counts.index, y=cholesterol_counts.values, text=chol
 fig1.update_traces(marker_color=['#636EFA','#EF553B','#00CC96'], marker_line_color='rgb(8,48,107)',
                    marker_line_width=1.5, opacity=0.6)
 st.plotly_chart(fig1, use_container_width=True)
-
 
 # Risk of Heart Attack in Asian Countries
 st.subheader('Risk of Heart Attack in Asian Countries')
@@ -82,14 +90,12 @@ fig7 = px.bar(risk_counts, x=risk_counts.index, y=risk_counts.values, text=risk_
               color_discrete_sequence=px.colors.sequential.Blues_r)
 st.plotly_chart(fig7, use_container_width=True)
 
-
 # Heart Attack Risk by Triglycerides Level
 st.subheader('Heart Attack Risk by Triglycerides Level')
 triglycerides_risk = data.groupby('Triglycerides Category')['Heart Attack Risk'].mean().reindex(triglycerides_labels)
 fig2 = px.line(x=triglycerides_risk.index, y=triglycerides_risk.values, markers=True)
 fig2.update_traces(line_color='#FECB52')
 st.plotly_chart(fig2, use_container_width=True)
-
 
 # Heart Attack Risk by Cholestrol Level
 st.subheader('Risk by Cholesterol Level')
